@@ -36,7 +36,9 @@ function NOT(){
 }
 
 //ADD function
-function ADD(){
+function ADD(string){
+    // string = "ADD t0, A"
+
     stackADD();
 }
 
