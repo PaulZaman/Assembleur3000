@@ -1,5 +1,5 @@
 import './App.css';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 
 function App() {
   // create variables
