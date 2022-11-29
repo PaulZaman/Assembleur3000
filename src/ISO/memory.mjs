@@ -1,10 +1,10 @@
 const memory = {
 	"pc": 0,
 	"registers": {
-		"t0": 0,
-		"t1": 0,
-		"t2": 0,
-		"t3": 0,
+		"T0": 0,
+		"T1": 0,
+		"T2": 0,
+		"T3": 0,
 	},
 	"variables": {},
 	"byteStack": [],

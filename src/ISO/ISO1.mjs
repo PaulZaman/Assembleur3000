@@ -1,6 +1,6 @@
 // import memory
 import memory from './memory.mjs';
-import { LDA } from './isoFunction.mjs';
+import { LDA, STR } from './isoFunction.mjs';
 
 // For testing purposes
 var dataANDcode = ["#DATA", "A 10", "B 15", "RES 0", "!NEXT ON S'EN TAPE", "#CODE", "LDA T0 A", "LDA T1 B", "ADD T0 T1", "STR RES T0", "HLT"];
@@ -39,24 +39,28 @@ function split(dataANDcode) {
 function runCode(code, pc) {
     var i = 1;
     while (i < pc + 1) {
-        // ADD parameters to stack
-        const parameters = code[i].substring(4).split(" "); // seperate parameters from instruction
-        for (var j = parameters.length - 1; j > -1; j--) {
-            memory.byteStack.push(parameters[j]);
-        }   // Add parameters to stack
-
+        console.log("Execution of instruction " + i + ": " + code[i]);
+        console.log("Memory before execution: ");
+        console.log(memory);
         // Call corresponding function to instruction
+        const params = code[i].substring(4).split(" ");
         switch (code[i].substring(0, 3)) {
             case "LDA": {
-                LDA();
+                LDA(params[0], params[1]);
+                break;
             }
-            case "STR":
-            case "ADD":
-            case "HLT":
-            case "JMP":
+            case "STR": {
+                STR(params[0], params[1]);
+                break
+            }
+            default: {
+                break;
+            }
         }
         i++;
         memory.pc++;
+        console.log("Memory after execution: ");
+        console.log(memory);
     };
 };
 
@@ -67,7 +71,7 @@ function run(dataANDcode, pc) {
     runCode(code, pc);
 }
 
+run(dataANDcode, 4);
 
-run(dataANDcode, 1);
+
 //LDA("LDA T0 A");
-console.log(memory);
