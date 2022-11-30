@@ -1,9 +1,9 @@
 // import memory
 import memory from './memory.mjs';
-import { LDA, STR } from './isoFunction.mjs';
+import { LDA, STR, AND, OR, NOT, ADD, SUB, DIV, MUL } from './isoFunction.mjs';
 
 // For testing purposes
-var dataANDcode = ["#DATA", "A 10", "B 15", "RES 0", "!NEXT ON S'EN TAPE", "#CODE", "LDA T0 A", "LDA T1 B", "ADD T0 T1", "STR RES T0", "HLT"];
+var dataANDcode = ["#DATA", "A 10", "B 15", "RES 0", "!NEXT ON S'EN TAPE", "#CODE", "DIV T0 5", "ADD T0 6", "HLT"];
 
 // read data and set in memory
 function readData(data) {
@@ -12,7 +12,7 @@ function readData(data) {
         var variable = data[i].split(" ");
         var name = variable[0];
         var value = variable[1];
-        memory.variables[name] = value;
+        memory.variables[name] = parseInt(value);
     }
 }
 
@@ -53,6 +53,34 @@ function runCode(code, pc) {
                 STR(params[0], params[1]);
                 break
             }
+            case "AND": {
+                AND(params[0], params[1]);  
+                break;
+            }
+            case "OR ": {
+                OR(code[i].substring(3).split(" ")[0], params[1]);
+                break;
+            }
+            case "NOT": {
+                NOT(params[0]);
+                break;
+            }
+            case "ADD": {
+                ADD(params[0], params[1]);
+                break;
+            }
+            case "SUB": {
+                SUB(params[0], params[1]);
+                break;
+            }
+            case "DIV": {   
+                DIV(params[0], params[1]);
+                break;
+            }
+            case "MUL": {
+                MUL(params[0], params[1]);
+                break;
+            }
             default: {
                 break;
             }
@@ -71,7 +99,7 @@ function run(dataANDcode, pc) {
     runCode(code, pc);
 }
 
-run(dataANDcode, 4);
+run(dataANDcode, 2);
 
 
-//LDA("LDA T0 A");
+
