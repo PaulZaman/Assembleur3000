@@ -22,6 +22,92 @@ export function STR(variable, value) {
 	memory.variables[variable] = value;
 }
 
+export function AND(register, value) {
+	console.log("AND");
+	// If value is a variable, get the value from memory
+	if (value in memory.variables) {
+		value = memory.variables[value];
+	}
+	if (value in memory.registers) {
+		value = memory.registers[value];
+	}
+	// perform AND operation between value and register
+	memory.registers[register] = parseFloat(memory.registers[register] && value);
+}
+
+export function OR(register, value) {
+	console.log(register, value);
+	// If value is a variable, get the value from memory
+	if (value in memory.variables) {
+		value = memory.variables[value];
+	}
+	if (value in memory.registers) {
+		value = memory.registers[value];
+	}
+	// perform OR operation between value and register
+	memory.registers[register] = parseFloat(memory.registers[register] || value);
+}
+
+export function NOT(register) {
+	// perform NOT operation on register
+	if (memory.registers[register] == 0) {
+		memory.registers[register] = 1;
+	}
+	else {
+		memory.registers[register] = 0;
+	}
+}
+
+export function ADD(register, value) {
+	// If value is a variable, get the value from memory
+	if (value in memory.variables) {
+		value = memory.variables[value];
+	}
+	if (value in memory.registers) {
+		value = memory.registers[value];
+	}
+	// perform ADD operation between value and register
+	memory.registers[register] = memory.registers[register] + parseInt(value);
+}
+
+export function SUB(register, value) {
+	// If value is a variable, get the value from memory
+	if (value in memory.variables) {
+		value = memory.variables[value];
+	}
+	if (value in memory.registers) {
+		value = memory.registers[value];
+	}
+	// perform SUB operation between value and register
+	memory.registers[register] = memory.registers[register] - value;
+}
+
+export function DIV(register, value) {
+	// If value is a variable, get the value from memory
+	if (value in memory.variables) {
+		value = memory.variables[value];
+	}
+	if (value in memory.registers) {
+		value = memory.registers[value];
+	}
+	// perform DIV operation between value and register
+	if (value != 0) {
+		memory.registers[register] = memory.registers[register] / value;
+	}
+}
+
+export function MUL(register, value) {
+	// If value is a variable, get the value from memory
+	if (value in memory.variables) {
+		value = memory.variables[value];
+	}
+	if (value in memory.registers) {
+		value = memory.registers[value];
+	}
+	// perform MUL operation between value and register
+	memory.registers[register] = memory.registers[register] * value;
+}
+
 export function PUSH(expression) {
 	console.log(expression);
 

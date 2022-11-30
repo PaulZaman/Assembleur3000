@@ -1,6 +1,6 @@
 // import memory
 import memory from './memory.mjs';
-import { LDA, STR, PUSH, POP, MOD, INC, DEC } from './isoFunction.mjs';
+import { LDA, STR, AND, OR, NOT, ADD, SUB, DIV, MUL, PUSH, POP, MOD, INC, DEC } from './isoFunction.mjs';
 
 
 // read data and set in memory
@@ -84,18 +84,16 @@ function runInstruction(instruction, stopval) {
                 output = runInstruction(split(memory.code)[1][memory.pc], stopval);
                 memory.pc++;
             }
-            memory.pc = buffer;
+            default: {
             break;
         }
-        default: {
-            break;
-        }
-    };
-    // Display
-    console.log("Memory after execution: ");
-    console.log(memory.variables);
-    console.log(memory.registers);
-    console.log("---------------------------------------------")
+    }
+};
+// Display
+console.log("Memory after execution: ");
+console.log(memory.variables);
+console.log(memory.registers);
+console.log("---------------------------------------------")
 
 
 
@@ -118,4 +116,3 @@ function run(stopval) {
 run(5);
 
 
-//LDA("LDA T0 A");
