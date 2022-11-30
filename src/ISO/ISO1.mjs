@@ -85,6 +85,34 @@ function runInstruction(instruction, stopval) {
             }
             memory.pc = buffer;
         }
+        case "AND": {
+            AND(params[0], params[1]);
+            break;
+        }
+        case "OR ": {
+            OR(code[i].substring(3).split(" ")[0], params[1]);
+            break;
+        }
+        case "NOT": {
+            NOT(params[0]);
+            break;
+        }
+        case "ADD": {
+            ADD(params[0], params[1]);
+            break;
+        }
+        case "SUB": {
+            SUB(params[0], params[1]);
+            break;
+        }
+        case "DIV": {
+            DIV(params[0], params[1]);
+            break;
+        }
+        case "MUL": {
+            MUL(params[0], params[1]);
+            break;
+        }
         default: {
             break;
         }
