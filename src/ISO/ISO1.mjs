@@ -38,9 +38,8 @@ function runInstruction(instruction, stopval) {
     // Display
     console.log("---------------------------------------------")
     console.log("Execution of instruction : " + instruction);
-    console.log("Memory before execution: ");
-    console.log(memory.variables);
-    console.log(memory.registers);
+    console.log("Memory before execution: ", memory.variables, memory.registers);
+
     // Call corresponding function to instruction
     const params = instruction.substring(4).split(" ");
     switch (instruction.substring(0, 3)) {
@@ -84,19 +83,15 @@ function runInstruction(instruction, stopval) {
                 output = runInstruction(split(memory.code)[1][memory.pc], stopval);
                 memory.pc++;
             }
-            default: {
+            memory.pc = buffer;
+        }
+        default: {
             break;
         }
-    }
-};
-// Display
-console.log("Memory after execution: ");
-console.log(memory.variables);
-console.log(memory.registers);
-console.log("---------------------------------------------")
-
-
-
+    };
+    // Display
+    console.log("Memory after execution: ", memory.variables, memory.registers);
+    console.log("---------------------------------------------")
 };
 
 // general run function, recieves a dataANDcode array + pc 
@@ -113,6 +108,6 @@ function run(stopval) {
     }
 }
 
-run(5);
+run(10);
 
 

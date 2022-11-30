@@ -10,7 +10,7 @@ const memory = {
 	"byteStack": [],
 	"code": [
 		"#DATA",
-		"A 11",
+		"A 10",
 		"B 15",
 		"RES 0",
 		"!NEXT ON S'EN TAPE",
@@ -19,8 +19,10 @@ const memory = {
 		"JMP LABEL",
 		"INC T0",
 		"DEC T0",
+		"JMP LABEL2",
 		"LABEL:",
 		"LDA T0 A",
+		"LABEL2:",
 		"HLT",
 	]
 }
