@@ -8,6 +8,21 @@ const memory = {
 	},
 	"variables": {},
 	"byteStack": [],
+	"code": [
+		"#DATA",
+		"A 11",
+		"B 15",
+		"RES 0",
+		"!NEXT ON S'EN TAPE",
+
+		"#CODE",
+		"JMP LABEL",
+		"INC T0",
+		"DEC T0",
+		"LABEL:",
+		"LDA T0 A",
+		"HLT",
+	]
 }
 
 export default memory;

@@ -1,26 +1,24 @@
 // import memory
 import memory from './memory.mjs';
-import { LDA, STR } from './isoFunction.mjs';
+import { LDA, STR, PUSH, POP, MOD, INC, DEC } from './isoFunction.mjs';
 
-// For testing purposes
-var dataANDcode = ["#DATA", "A 10", "B 15", "RES 0", "!NEXT ON S'EN TAPE", "#CODE", "LDA T0 A", "LDA T1 B", "ADD T0 T1", "STR RES T0", "HLT"];
 
 // read data and set in memory
 function readData(data) {
     // this function reads an array of strings and sets the values in memory
-    for (var i = 1; i < data.length; i++) {
-        var variable = data[i].split(" ");
-        var name = variable[0];
-        var value = variable[1];
-        memory.variables[name] = value;
+    for (let i = 1; i < data.length; i++) {
+        let variable = data[i].split(" ");
+        let name = variable[0];
+        let value = variable[1];
+        memory.variables[name] = parseInt(value);
     }
 }
 
 //Split dataANDcode array into data and code arrays
 function split(dataANDcode) {
-    var data = [];
-    var code = [];
-    var i = 0;
+    let data = [];
+    let code = [];
+    let i = 0;
     while (dataANDcode[i] != "!NEXT ON S'EN TAPE") {
         data.push(dataANDcode[i]);
         i++;
@@ -36,42 +34,88 @@ function split(dataANDcode) {
 };
 
 //Separate code array and execute correspondign instructions
-function runCode(code, pc) {
-    var i = 1;
-    while (i < pc + 1) {
-        console.log("Execution of instruction " + i + ": " + code[i]);
-        console.log("Memory before execution: ");
-        console.log(memory);
-        // Call corresponding function to instruction
-        const params = code[i].substring(4).split(" ");
-        switch (code[i].substring(0, 3)) {
-            case "LDA": {
-                LDA(params[0], params[1]);
-                break;
-            }
-            case "STR": {
-                STR(params[0], params[1]);
-                break
-            }
-            default: {
-                break;
-            }
+function runInstruction(instruction, stopval) {
+    // Display
+    console.log("---------------------------------------------")
+    console.log("Execution of instruction : " + instruction);
+    console.log("Memory before execution: ");
+    console.log(memory.variables);
+    console.log(memory.registers);
+    // Call corresponding function to instruction
+    const params = instruction.substring(4).split(" ");
+    switch (instruction.substring(0, 3)) {
+        case "LDA": {
+            LDA(params[0], params[1]);
+            break;
         }
-        i++;
-        memory.pc++;
-        console.log("Memory after execution: ");
-        console.log(memory);
+        case "STR": {
+            STR(params[0], params[1]);
+            break;
+        }
+        case "PUS": {
+            PUSH(params[1]);
+            break;
+        }
+        case "POP": {
+            POP(params[0]);
+            break;
+        }
+        case "HLT": {
+            console.log("HLT instruction reached, stopping execution");
+            return -1;
+        }
+        case "MOD": {
+            MOD(params[0], params[1]);
+            break;
+        }
+        case "INC": {
+            INC(params[0]);
+            break;
+        }
+        case "DEC": {
+            DEC(params[0]);
+            break;
+        }
+        case "JMP": {
+            const buffer = memory.pc;
+            memory.pc = split(memory.code)[1].findIndex((element) => element === params[0] + ":");
+            let output = undefined;
+            while (output != -1 && memory.pc != stopval) {
+                output = runInstruction(split(memory.code)[1][memory.pc], stopval);
+                memory.pc++;
+            }
+            memory.pc = buffer;
+            break;
+        }
+        default: {
+            break;
+        }
     };
+    // Display
+    console.log("Memory after execution: ");
+    console.log(memory.variables);
+    console.log(memory.registers);
+    console.log("---------------------------------------------")
+
+
+
 };
 
 // general run function, recieves a dataANDcode array + pc 
-function run(dataANDcode, pc) {
-    const [data, code] = split(dataANDcode);
+function run(stopval) {
+    let [data, code] = split(memory.code);
     readData(data);
-    runCode(code, pc);
+    while (memory.pc != stopval && memory.pc <= code.length - 1) {
+        // DEV
+
+        if (runInstruction(code[memory.pc], stopval) == -1) {
+            return;
+        };
+        memory.pc++;
+    }
 }
 
-run(dataANDcode, 4);
+run(5);
 
 
 //LDA("LDA T0 A");

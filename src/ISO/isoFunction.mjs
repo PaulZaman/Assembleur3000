@@ -22,3 +22,33 @@ export function STR(variable, value) {
 	memory.variables[variable] = value;
 }
 
+export function PUSH(expression) {
+	console.log(expression);
+
+	if (expression in memory.registers) {
+		expression = memory.registers[expression];
+	}
+	if (expression in memory.variables) {
+		expression = memory.variables[expression];
+	}
+	memory.byteStack.push(expression);
+}
+
+export function POP(register) {
+	memory.registers[register] = memory.byteStack.pop();
+}
+
+export function MOD(register, value) {
+	if (value in memory.variables) {
+		value = memory.variables[value];
+	}
+	memory.registers[register] = memory.registers[register] % value;
+}
+
+export function INC(register) {
+	memory.registers[register]++;
+}
+
+export function DEC(register) {
+	memory.registers[register]--;
+}
