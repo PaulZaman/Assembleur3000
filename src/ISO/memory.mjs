@@ -16,12 +16,13 @@ const memory = {
 		"!NEXT ON S'EN TAPE",
 
 		"#CODE",
-		"JMP LABEL",
+		"BEQ 2 2 LABEL",
 		"INC T0",
-		"DEC T0",
 		"JMP LABEL2",
+
 		"LABEL:",
 		"LDA T0 A",
+
 		"LABEL2:",
 		"HLT",
 	]
