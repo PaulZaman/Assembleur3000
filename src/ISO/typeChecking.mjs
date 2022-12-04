@@ -1,9 +1,11 @@
+import { getVariable } from "./memManagement.mjs";
 import memory from "./memory.mjs";
 
 
 export function type(param, register, variable, constant) {
+
 	if (param in memory.variables && variable === true) {
-		return memory.variables[param];
+		return getVariable(param);
 	}
 	if (param in memory.registers && register === true) {
 		return memory.registers[param];

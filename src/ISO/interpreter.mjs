@@ -2,16 +2,7 @@
 import memory from './memory.mjs';
 import { LDA, STR, AND, OR, NOT, ADD, SUB, DIV, MUL, PUSH, POP, MOD, INC, DEC, JMP, BEQ, BNE, BBG, BSM, SRL, SRR } from './alu.mjs';
 import { splitTo2Arrays, fromStringToArray } from './ArrayAndStringManipulation.mjs';
-
-export function emptyMemory() {
-    // this function empties the memory
-    memory.variables = {};
-    for (let i = 0; i < 4; i++) {
-        memory.registers["T" + i] = 0;
-    }
-    memory.byteStack = [];
-    memory.pc = 0;
-}
+import { createVariable, emptyMemory } from './memManagement.mjs';
 
 export function ParserData(data) {
     // make sure data is ok
@@ -27,7 +18,7 @@ function readData(data) {
     // this function reads an array of strings and sets the values in memory
     for (let i = 1; i < data.length; i++) {
         let variable = data[i].split(" ");
-        memory.variables[variable[0]] = parseInt(variable[1]);
+        createVariable(variable[0], variable[1]);
     }
 }
 
@@ -57,7 +48,6 @@ export function runInstruction(instruction, stopval) {
             break;
         }
         case "HLT": {
-            console.log("HLT instruction reached, stopping execution");
             return -1;
         }
         case "MOD": {
@@ -175,7 +165,6 @@ export function run(dataANDcode, stopval) {
     if (iterations > 1000) {
         throw new Error("Too many iterations");
     }
-    console.log("Execution finished");
     if (memory.pc < 0) {
         memory.pc = 0;
     }

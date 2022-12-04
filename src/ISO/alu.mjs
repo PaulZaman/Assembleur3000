@@ -3,6 +3,7 @@
 import memory from './memory.mjs';
 import { runInstruction } from './interpreter.mjs';
 import { type } from './typeChecking.mjs';
+import { setVariable } from './memManagement.mjs';
 
 
 export function LDA(register, value) {
@@ -28,7 +29,7 @@ export function STR(variable, value) {
 	value = type(value, true, false, true);
 
 	// Store value into variable
-	memory.variables[variable] = value;
+	setVariable(variable, value);
 }
 
 export function PUSH(expression) {
@@ -244,7 +245,6 @@ export function BSM(param1, param2, label, stopval) {
 		JMP(label, stopval);
 	}
 }
-
 
 export function JMP(label, stopval) {
 	/*JMP <LABEL>

@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { run, emptyMemory, getRunningInstruction } from './ISO/interpreter.mjs';
+import { run, getRunningInstruction } from './ISO/interpreter.mjs';
+import { memoryGetAllVariables, emptyMemory } from './ISO/memManagement.mjs';
 import memory from './ISO/memory.mjs';
 import Memory from './Memory.js';
 import TextArea from './TextArea.js';
@@ -13,7 +14,7 @@ function ISO() {
   var [byteStack, setByteStack] = useState({});
 
   const VariablesReset = () => {
-    setVariables(memory.variables);
+    setVariables(memoryGetAllVariables());
     setByteStack(memory.byteStack);
     setRegisters(memory.registers);
     setOutput(getRunningInstruction(code));
