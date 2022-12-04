@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { run, emptyMemory } from './ISO/interpreter.mjs';
+import { run, emptyMemory, getRunningInstruction } from './ISO/interpreter.mjs';
 import memory from './ISO/memory.mjs';
 import Memory from './Memory.js';
+import TextArea from './TextArea.js';
 
 function ISO() {
   // create variables
@@ -15,41 +16,33 @@ function ISO() {
     setVariables(memory.variables);
     setByteStack(memory.byteStack);
     setRegisters(memory.registers);
+    setOutput(getRunningInstruction(code));
+  }
+
+  const Run = (step) => {
+    try {
+      run(code, step);
+
+    }
+    catch (e) {
+      setOutput(e);
+      memory.pc = 0;
+    }
+    VariablesReset();
   }
 
   const handleRun = () => {
-    try {
-      run(code, "END");
-    }
-    catch (e) {
-      setOutput(e);
-      memory.pc = 0;
-    }
-    VariablesReset();
+    Run('END');
   }
 
   const handleNextStep = () => {
-    try {
-      memory.pc++
-      run(code, memory.pc);
-    }
-    catch (e) {
-      setOutput(e);
-      memory.pc = 0;
-    }
-    VariablesReset();
+    memory.pc++;
+    Run(memory.pc);
   }
 
   const handlePrevStep = () => {
-    try {
-      memory.pc--;
-      run(code, memory.pc);
-    }
-    catch (e) {
-      setOutput(e);
-      memory.pc = 0;
-    }
-    VariablesReset();
+    memory.pc--;
+    Run(memory.pc);
   }
 
   const handleFileChange = (e) => {
@@ -71,7 +64,8 @@ function ISO() {
     <>
       <div className="flex justify-center">
         <div className="input">
-          <textarea className="text-white bg-black w-80 h-96 font-[Courier] p-4" value={code} onChange={(e) => setCode(e.target.value)}></textarea>
+          {/* <textarea className="text-white bg-black w-80 h-96 font-[Courier] p-4" value={code} onChange={(e) => setCode(e.target.value)}></textarea> */}
+          <TextArea value={code} onChange={(e) => setCode(e.target.value)} />
         </div>
         <div className="m-3">
           <div className="flex justify-center h-12">

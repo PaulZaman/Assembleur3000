@@ -258,3 +258,67 @@ export function JMP(label, stopval) {
 		memory.pc++;
 	}
 }
+
+export function SRL(register, constant) {
+	/*
+	SRL <reg> <const>
+	This operation takes the value in reg and performs a logical shift left 
+	of the number of bits defined by the constant const. 
+	For instance, the value 0001 left shifted 1 time becomes 0010.*/
+
+	// Check if Parameters are valid
+	type(register, true, false, false);
+	constant = type(constant, false, false, true);
+
+	// Convert register to string
+	let registerString = memory.registers[register].toString();
+
+	// Check if all caracters in registerString are 0 or 1
+	for (let i = 0; i < registerString.length; i++) {
+		if (registerString[i] !== "0" && registerString[i] !== "1") {
+			let error = registerString + " is not a valid binary number.\nCommand line " + memory.pc;
+			throw error
+		}
+	}
+
+
+	// Add correct amount of 0s to the right
+	for (let i = 0; i < constant; i++) {
+		memory.registers[register] += "0";
+	}
+
+	// Convert the value back to a number
+	memory.registers[register] = parseInt(memory.registers[register]);
+
+}
+
+export function SRR(register, constant) {
+	/*SRR <reg> <const>
+	This operation takes the value in reg and performs a logical shift right 
+	of the number of bits defined by the constant const. 
+	For instance, the value 1000 right shifted 1 time becomes 0100.
+	*/
+
+	// Check if Parameters are valid
+	type(register, true, false, false);
+	constant = type(constant, false, false, true);
+
+	// Convert register to string
+	let registerString = memory.registers[register].toString();
+
+	// Check if all caracters in registerString are 0 or 1
+	for (let i = 0; i < registerString.length; i++) {
+		if (registerString[i] !== "0" && registerString[i] !== "1") {
+			let error = registerString + " is not a valid binary number.\nCommand line " + memory.pc;
+			throw error
+		}
+	}
+
+	// Perform SRR operation
+	for (let i = 0; i < constant; i++) {
+		registerString = registerString.slice(0, -1);
+	}
+
+	// Convert the value back to a number
+	memory.registers[register] = parseInt(registerString);
+}

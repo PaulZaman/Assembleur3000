@@ -1,7 +1,7 @@
 // import memory
 import memory from './memory.mjs';
-import { LDA, STR, AND, OR, NOT, ADD, SUB, DIV, MUL, PUSH, POP, MOD, INC, DEC, JMP, BEQ, BNE, BBG, BSM } from './alu.mjs';
-import { splitTo2Arrays, fromStringToArray } from './ArrayAndStringManipulation.js';
+import { LDA, STR, AND, OR, NOT, ADD, SUB, DIV, MUL, PUSH, POP, MOD, INC, DEC, JMP, BEQ, BNE, BBG, BSM, SRL, SRR } from './alu.mjs';
+import { splitTo2Arrays, fromStringToArray } from './ArrayAndStringManipulation.mjs';
 
 export function emptyMemory() {
     // this function empties the memory
@@ -120,6 +120,14 @@ export function runInstruction(instruction, stopval) {
             BSM(params[0], params[1], params[2], stopval);
             break;
         }
+        case "SRL": {
+            SRL(params[0], params[1]);
+            break;
+        }
+        case "SRR": {
+            SRR(params[0], params[1]);
+            break;
+        }
         default: {
             break;
         }
@@ -171,4 +179,16 @@ export function run(dataANDcode, stopval) {
     if (memory.pc < 0) {
         memory.pc = 0;
     }
+}
+
+export function getRunningInstruction(dataAndcode) {
+    let output = memory.code[memory.pc - 1];
+    if (output === undefined) {
+        output = "#CODE\nPress next to move to next step";
+    }
+    if (memory.code[memory.pc] === 'HLT') {
+        output = "HLT\n Execution Ended";
+    }
+    return "Executed until instruction: \n\n" + output
+
 }
