@@ -7,7 +7,7 @@ import TextArea from './TextArea.js';
 
 function ISO() {
   // create variables
-  var [code, setCode] = useState('\n#DATA\nA 10\nB 15\nRES 0\n\n!NEXT, WE START THE CODE WITH THE #CODE MACRO\n#CODE\nLDA T0 A\nLDA T1 B\nADD T0 T1\nSTR RES T0\nHLT\n');
+  var [code, setCode] = useState('\n#DATA\nA 10\nB 15\nRES 0\n!NEXT, WE START THE CODE WITH THE #CODE MACRO\n#CODE\nLDA T0 A\nLDA T1 B\nADD T0 T1\nSTR RES T0\nHLT\n');
   var [output, setOutput] = useState('');
   var [registers, setRegisters] = useState(memory.registers);
   var [variables, setVariables] = useState({});
