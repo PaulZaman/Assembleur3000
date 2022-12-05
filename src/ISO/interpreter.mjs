@@ -2,13 +2,18 @@
 import memory from './memory.mjs';
 import { LDA, STR, AND, OR, NOT, ADD, SUB, DIV, MUL, PUSH, POP, MOD, INC, DEC, JMP, BEQ, BNE, BBG, BSM, SRL, SRR } from './alu.mjs';
 import { splitTo2Arrays, fromStringToArray } from './ArrayAndStringManipulation.mjs';
-import { createVariable, emptyMemory } from './memManagement.mjs';
+import { createArray, createVariable, emptyMemory, getAdressofVariable, incrementAdress, getValueAtAdress } from './memManagement.mjs';
+import { type } from './typeChecking.mjs';
 
 export function ParserData(data) {
     // make sure data is ok
     for (let i = 1; i < data.length; i++) {
-        if (data[i].split(" ").length !== 2) {
-            throw new Error("Data is not valid");
+        let line = data[i].split(" ");
+        if (line.length !== 2) {
+            // Check if the line does not contain an array declaration
+            if (!line[0].includes("[")) {
+                throw new Error("Data is not valid");
+            }
         }
     }
 }
@@ -18,9 +23,44 @@ function readData(data) {
     // this function reads an array of strings and sets the values in memory
     for (let i = 1; i < data.length; i++) {
         let variable = data[i].split(" ");
-        createVariable(variable[0], variable[1]);
+        if (variable[0].includes("[")) {
+            // This is an array
+            let arrayName = variable[0].split("[")[0];
+            let arraySize = variable[0].split("[")[1].split("]")[0];
+            // Create the array
+            variable = variable.slice(1);   // Remove the array declaration
+            createArray(arrayName, arraySize, variable);
+        } else {
+            // This is a variable
+            createVariable(variable[0], variable[1]);
+        }
     }
 }
+
+export function getValueOfArrayAtPosition(arrayName, position) {
+    // This function returns the value of an array at a given position
+    // get adress of array
+    let address = getAdressofVariable(arrayName);
+
+    // Check if info is valid the arrayname is a variable and the index is a constant
+    if (!(arrayName in memory.variables)) {
+        throw new Error(arrayName + " is not a valid variable in line " + memory.pc);
+    }
+    position = type(position, true, true, true);
+
+    console.log("Address of array: " + address);
+    console.log("Position in array: " + position);
+
+    // get adress of position
+    while (position > 0) {
+        address = incrementAdress(address);
+        position--;
+    }
+
+    return getValueAtAdress(address);
+
+}
+
 
 //Run a single instruction
 export function runInstruction(instruction, stopval) {
@@ -129,6 +169,7 @@ export function runInstruction(instruction, stopval) {
 
 // general run function, recieves a stop value and runs code until it reaches stopval 
 export function run(dataANDcode, stopval) {
+
     let [data, code] = splitTo2Arrays(fromStringToArray(dataANDcode));
     // Before running, we need to run the data through the interpreter to check wheather
     // it is valid or not
@@ -181,3 +222,6 @@ export function getRunningInstruction(dataAndcode) {
     return "Executed until instruction: \n\n" + output
 
 }
+
+run("#DATA\na 0\nb 0\nc[10] 1 2 3 4 5 6 7\n#CODE\nLDA T0 c[3]\nSTR a 3\nHLT", 3);
+console.log(memory.mem);
