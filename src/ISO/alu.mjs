@@ -1,7 +1,7 @@
 // contains the functions for the ISO
 // these function manipulate the stack and calls the functions in the isoFunction.js file to do the actual work
 import memory from './memory.mjs';
-import { runInstruction } from './interpreter.mjs';
+import { getValueOfArrayAtPosition, runInstruction } from './interpreter.mjs';
 import { type } from './typeChecking.mjs';
 import { setVariable } from './memManagement.mjs';
 
@@ -13,8 +13,15 @@ export function LDA(register, value) {
 
 	// Check if Parameters are valid
 	type(register, true, false, false);
-	value = type(value, true, true, true);
 
+	// Check if value contains + sign --- meaning it woudl be a memory address
+	if (value.includes('+')) {
+		let values = value.split('+');
+		value = getValueOfArrayAtPosition(values[0], values[1]);
+
+	} else {
+		value = type(value, true, true, true);
+	}
 	// Load value into register
 	memory.registers[register] = value;
 }

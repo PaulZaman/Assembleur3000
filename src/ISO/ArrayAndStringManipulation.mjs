@@ -25,3 +25,4 @@ export function splitTo2Arrays(dataANDcode) {
 	code = code.filter((element) => !element.startsWith("!") && element !== "");
 	return [data, code];
 };
+
