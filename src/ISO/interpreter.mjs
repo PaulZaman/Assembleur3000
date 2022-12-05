@@ -222,3 +222,6 @@ export function getRunningInstruction(dataAndcode) {
     return "Executed until instruction: \n\n" + output
 
 }
+
+run("#DATA\na 0\nb 0\nc[10] 1 2 3 4 5 6 7\n#CODE\nLDA T0 c[3]\nSTR a 3\nHLT", 3);
+console.log(memory.mem);

@@ -33,7 +33,10 @@ export function STR(variable, value) {
 
 	// Check if Parameters are valid
 	type(variable, false, true, false);
-	value = type(value, true, false, true);
+	if (value.includes('+')) {
+		let values = value.split('+');
+		value = getValueOfArrayAtPosition(values[0], values[1]);
+	}
 
 	// Store value into variable
 	setVariable(variable, value);
