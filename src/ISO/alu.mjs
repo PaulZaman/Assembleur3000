@@ -18,10 +18,10 @@ export function LDA(register, value) {
 	if (value.includes('+')) {
 		let values = value.split('+');
 		value = getValueOfArrayAtPosition(values[0], values[1]);
-
 	} else {
 		value = type(value, true, true, true);
 	}
+
 	// Load value into register
 	memory.registers[register] = value;
 }
@@ -37,13 +37,17 @@ export function STR(variable, value) {
 		let values = value.split('+');
 		value = getValueOfArrayAtPosition(values[0], values[1]);
 	}
+	else {
+		console.log(value);
+		value = type(value, true, false, true);
+	}
 
 	// Store value into variable
 	setVariable(variable, value);
 }
 
 export function PUSH(expression) {
-	// PUSH <reg>/<var>/<const>
+	// PUSH <reg>/<var>/<const>/<addr>
 	// Push to the top of the stack the contents of reg or var or a constant const
 
 	// Check if Parameters are valid

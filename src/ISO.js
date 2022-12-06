@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { run, getRunningInstruction } from './ISO/interpreter.mjs';
 import { memoryGetAllVariables, emptyMemory } from './ISO/memManagement.mjs';
 import memory from './ISO/memory.mjs';
-import Memory from './Memory.js';
-import TextArea from './TextArea.js';
+import Memory from './components/Memory.js';
+import TextArea from './components/TextArea.js';
 
 function ISO() {
   // create variables

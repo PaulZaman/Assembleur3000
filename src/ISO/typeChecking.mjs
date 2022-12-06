@@ -9,8 +9,6 @@ export function type(param, register, variable, constant) {
 	// variable: true if the parameter can be a variable
 	// constant: true if the parameter can be a constant
 	// If the parameter is not of the correct type an error is thrown
-
-
 	try {
 		// Check if the parameter is a register
 		if (variable === true) {
@@ -21,6 +19,11 @@ export function type(param, register, variable, constant) {
 			if (param.includes("[")) {
 				let arrayName = param.split("[")[0];
 				let position = param.split("[")[1].split("]")[0];
+				return getValueOfArrayAtPosition(arrayName, position);
+			}
+			if (param.includes("+")) {
+				let arrayName = param.split("+")[0];
+				let position = param.split("+")[1];
 				return getValueOfArrayAtPosition(arrayName, position);
 			}
 		}

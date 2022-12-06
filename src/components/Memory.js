@@ -1,7 +1,7 @@
-import memory from "./ISO/memory.mjs";
+import memory from "../ISO/memory.mjs";
 import Table from './Table.js'
 
-function Memory({registers, variables, byteStack }) {
+function Memory({ registers, variables, byteStack }) {
 	return (
 		<>
 			<div className="MEMORY flex justify-center">
@@ -25,7 +25,7 @@ function Memory({registers, variables, byteStack }) {
 				</table>
 			</div>
 
-			
+
 		</>
 	);
 }
