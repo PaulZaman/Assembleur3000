@@ -45,19 +45,21 @@ function Memory({ registers, variables, byteStack }) {
 				{variableTable}
 			</div>
 			{/* display the memroy in a table */}
-			<h1 className="text-center font-semibold"> MEMORY</h1>
-			<div className="MEMORY flex justify-center">
-				<table className="table-auto border mb-8">
-					<tbody>
-						{memory.mem.map((row, i) => (
-							<tr key={i}>
-								{row.map((cell, j) => (
-									<td key={j} className="border px-4 py-2 text-sm">{cell}</td>
-								))}
-							</tr>
-						))}
-					</tbody>
-				</table>
+			<div className="hover:scale-105 duration-500">
+				<h1 className="text-center font-semibold m-5"> MEMORY</h1>
+				<div className="MEMORY flex justify-center">
+					<table className="table-auto border mb-8">
+						<tbody>
+							{memory.mem.map((row, i) => (
+								<tr key={i}>
+									{row.map((cell, j) => (
+										<td key={j} className="border px-4 py-2 text-sm">{cell}</td>
+									))}
+								</tr>
+							))}
+						</tbody>
+					</table>
+				</div>
 			</div>
 		</>
 	);
