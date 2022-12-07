@@ -65,8 +65,8 @@ export function getValueOfArrayAtPosition(arrayName, position) {
 //Run a single instruction
 export function runInstruction(instruction, stopval) {
     // Display
-    console.log("\nExecution of instruction : " + instruction);
-    console.log("Memory before execution: ", memory.variables, memory.registers);
+    // console.log("\nExecution of instruction : " + instruction);
+    // console.log("Memory before execution: ", memory.variables, memory.registers);
 
     // Call corresponding function to instruction
     const params = instruction.substring(4).split(" ");
@@ -164,7 +164,7 @@ export function runInstruction(instruction, stopval) {
     };
 
     // Display
-    console.log("Memory after execution: ", memory.variables, memory.registers);
+    // console.log("Memory after execution: ", memory.variables, memory.registers);
 };
 
 // general run function, recieves a stop value and runs code until it reaches stopval 

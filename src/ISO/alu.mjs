@@ -52,7 +52,6 @@ export function PUSH(expression) {
 
 	// Check if Parameters are valid
 	expression = type(expression, true, true, true);
-
 	memory.byteStack.push(expression);
 }
 
