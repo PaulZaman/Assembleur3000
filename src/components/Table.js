@@ -1,7 +1,7 @@
 function Table({ dict, headingRow1, headingRow2, title }) {
 	return (
-		<div className='m-4'>
-			<h3 className='text-center'>{title}</h3>
+		<div className='m-4 hover:scale-110 duration-500'>
+			<h3 className='text-center font-semibold'>{title}</h3>
 			<table className="table-auto border">
 				<thead>
 					<tr>

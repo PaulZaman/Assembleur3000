@@ -12,8 +12,8 @@ function Header() {
 			</header>
 			<Router>
 				<ul className='bg-black flex m-5 rounded-md justify-center'>
-					<li className='m-3 text-white'><Link to="/">Home</Link></li>
-					<li className="m-3 text-white"><Link to="about">About</Link></li>
+					<li className='m-3 text-white font-semibold hover:scale-125 duration-500'><Link to="/">Home</Link></li>
+					<li className="m-3 text-white font-semibold hover:scale-125 duration-500"><Link to="about">About</Link></li>
 				</ul>
 				<Routes>
 					<Route path="/" element={<ISO />} />
