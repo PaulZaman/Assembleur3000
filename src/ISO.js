@@ -26,7 +26,6 @@ function ISO() {
       VariablesReset();
     }
     catch (e) {
-      console.log(e)
       VariablesReset();
       setOutput(e);
       memory.pc = 0;
@@ -67,7 +66,7 @@ function ISO() {
   return (
     <>
       <div className="flex justify-center">
-        <div className="input hover:scale-105 duration-500">
+        <div className="input">
           {/* <textarea className="text-white bg-black w-80 h-96 font-[Courier] p-4" value={code} onChange={(e) => setCode(e.target.value)}></textarea> */}
           <TextArea value={code} onChange={(e) => setCode(e.target.value)} />
         </div>

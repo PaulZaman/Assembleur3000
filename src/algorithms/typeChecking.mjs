@@ -43,9 +43,9 @@ export function type(param, register, variable, constant, array) {
 		}
 	} catch {
 		// If the parameter is not of the correct type throw an error
-		throw new Error("Invalid type for " + param);
+		throw new Error("Invalid type for " + param + "\n\nLine: " + memory.pc);
 	}
 	// If the parameter is not of the correct type throw an error
-	let error = param + " is not a valid parameter in line " + memory.pc;
-	throw error
+	let error = "\n" + param + " is not a valid parameter\n\nLine :" + memory.pc;
+	throw new Error(error);
 }

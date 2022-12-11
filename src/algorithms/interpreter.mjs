@@ -22,12 +22,17 @@ function readData(data) {
     // this function reads an array of strings and sets the values in memory
     for (let i = 1; i < data.length; i++) {
         let variable = data[i].split(" ");
+        //console.log(variable)
         if (variable[0].includes("[")) {
             // This is an array
             let arrayName = variable[0].split("[")[0];
             let arraySize = variable[0].split("[")[1].split("]")[0];
             // Create the array
             variable = variable.slice(1);   // Remove the array declaration
+            // If variables were not split by spaces, split them
+            if (variable.length === 1) {
+                variable = variable[0].split(",");
+            }
             createArray(arrayName, arraySize, variable);
         } else {
             // This is a variable

@@ -3,7 +3,7 @@
 import memory from './memory.mjs';
 import { runInstruction } from './interpreter.mjs';
 import { type } from './typeChecking.mjs';
-import { setVariable, getValueOfArrayAtPosition } from './memManagement.mjs';
+import { setVariable } from './memManagement.mjs';
 
 
 export function LDA(register, value) {
@@ -26,8 +26,7 @@ export function STR(variable, value) {
 
 	// Check if Parameters are valid
 	type(variable, false, true, false, true);
-	console.log(value);
-	value = type(value, true, false, true, true);
+	value = type(value, true, false, true, false);
 
 
 	// Store value into variable
@@ -39,7 +38,7 @@ export function PUSH(expression) {
 	// Push to the top of the stack the contents of reg or var or a constant const
 
 	// Check if Parameters are valid
-	expression = type(expression, true, true, true);
+	expression = type(expression, true, true, true, true);
 	memory.byteStack.push(expression);
 }
 
@@ -48,9 +47,9 @@ export function POP(register) {
 	// Pop from the top of the stack and store the value on reg. Storing in a memory region is NOT ALLOWED.
 
 	// Check if Parameters are valid
-	type(register, true, false, false);
+	type(register, true, false, false, false);
 
-	memory.registers[register] = memory.byteStack.pop();
+	memory.registers[register] = parseInt(memory.byteStack.pop());
 }
 
 export function AND(register, value) {
@@ -59,10 +58,10 @@ export function AND(register, value) {
 	// and store the result on register reg1. Memory regions stores (store result into a variable, for instance) are NOT ALLOWED.
 
 	// Check if Parameters are valid
-	type(register, true, false, false);
-	value = type(value, true, true, true);
+	type(register, true, false, false, false);
+	value = type(value, true, true, true, true);
 
-	memory.registers[register] = parseFloat(memory.registers[register] && value);
+	memory.registers[register] = parseInt(memory.registers[register] && value);
 }
 
 export function OR(register, value) {
@@ -72,10 +71,10 @@ export function OR(register, value) {
 	Memory regions stores (store result into a variable, for instance) are NOT ALLOWED. */
 
 	// Check if Parameters are valid
-	type(register, true, false, false);
-	value = type(value, true, true, true);
+	type(register, true, false, false, false);
+	value = type(value, true, true, true, true);
 
-	memory.registers[register] = parseFloat(memory.registers[register] || value);
+	memory.registers[register] = parseInt(memory.registers[register] || value);
 }
 
 export function NOT(register) {
@@ -100,8 +99,8 @@ export function ADD(register, value) {
 	Memory regions stores (store result into a variable, for instance) are NOT ALLOWED.*/
 
 	// Check if Parameters are valid
-	type(register, true, false, false);
-	value = type(value, true, true, true);
+	type(register, true, false, false, false);
+	value = type(value, true, true, true, true);
 
 	// perform ADD operation between value and register
 	memory.registers[register] = memory.registers[register] + parseInt(value);
@@ -114,8 +113,8 @@ export function SUB(register, value) {
 	Memory regions stores (store result into a variable, for instance) are NOT ALLOWED.*/
 
 	// Check if Parameters are valid
-	type(register, true, false, false);
-	value = type(value, true, true, true);
+	type(register, true, false, false, false);
+	value = type(value, true, true, true, true);
 
 	// perform SUB operation between value and register
 	memory.registers[register] = memory.registers[register] - value;
@@ -129,14 +128,14 @@ export function DIV(register, value) {
 	Memory regions stores (store result into a variable, for instance) are NOT ALLOWED.*/
 
 	// Check if Parameters are valid
-	type(register, true, false, false);
-	value = type(value, true, true, true);
+	type(register, true, false, false, false);
+	value = type(value, true, true, true, true);
 
 	// Perform DIV operation between value and register
 	if (value !== 0) {
 		memory.registers[register] = Math.floor(memory.registers[register] / value);
 	}
-	else throw new Error("Division by 0");
+	else throw new Error("Division by 0 at line " + memory.pc);
 }
 
 export function MUL(register, value) {
@@ -146,8 +145,8 @@ export function MUL(register, value) {
 	Memory regions stores (store result into a variable, for instance) are NOT ALLOWED.*/
 
 	// Check if Parameters are valid
-	type(register, true, false, false);
-	value = type(value, true, true, true);
+	type(register, true, false, false, false);
+	value = type(value, true, true, true, true);
 
 	// perform MUL operation between value and register
 	memory.registers[register] = memory.registers[register] * value;
@@ -161,8 +160,8 @@ export function MOD(register, value) {
 	Memory regions stores (store result into a variable, for instance) are NOT ALLOWED.*/
 
 	// Check if Parameters are valid
-	type(register, true, false, false);
-	value = type(value, true, true, true);
+	type(register, true, false, false, false);
+	value = type(value, true, true, true, true);
 
 	memory.registers[register] = value % memory.registers[register];
 }
@@ -173,7 +172,7 @@ export function INC(register) {
 	Memory increments (incrementing a variable, for instance) are NOT ALLOWED.*/
 
 	// Check if Parameters are valid
-	type(register, true, false, false);
+	type(register, true, false, false, false);
 
 	memory.registers[register]++;
 }
@@ -184,7 +183,7 @@ export function DEC(register) {
 	Memory increments (decrementing a variable, for instance) are NOT ALLOWED.*/
 
 	// Check if Parameters are valid
-	type(register, true, false, false);
+	type(register, true, false, false, false);
 
 	memory.registers[register]--;
 }
@@ -195,8 +194,8 @@ export function BEQ(param1, param2, label, stopval) {
 	Any combination is permitted. If they are equal, jump to the address defined by the label LABEL*/
 
 	// Check if Parameters are valid
-	param1 = type(param1, true, true, true);
-	param2 = type(param2, true, true, true);
+	param1 = type(param1, true, true, true, true);
+	param2 = type(param2, true, true, true, true);
 
 	if (param1 === param2) {
 		JMP(label, stopval);
@@ -209,8 +208,8 @@ export function BNE(param1, param2, label, stopval) {
 	Any combination is permitted. If they are different, jump to the address defined by the label LABEL*/
 
 	// Check if Parameters are valid
-	param1 = type(param1, true, true, true);
-	param2 = type(param2, true, true, true);
+	param1 = type(param1, true, true, true, true);
+	param2 = type(param2, true, true, true, true);
 
 	if (param1 !== param2) {
 		JMP(label, stopval);
@@ -224,8 +223,8 @@ export function BBG(param1, param2, label, stopval) {
 	jump to the address defined by the label LABEL*/
 
 	// Check if Parameters are valid
-	param1 = type(param1, true, true, true);
-	param2 = type(param2, true, true, true);
+	param1 = type(param1, true, true, true, true);
+	param2 = type(param2, true, true, true, true);
 
 	if (param1 > param2) {
 		JMP(label, stopval);
@@ -239,9 +238,8 @@ export function BSM(param1, param2, label, stopval) {
 	jump to the address defined by the label LABEL */
 
 	// Check if Parameters are valid
-	param1 = type(param1, true, true, true);
-	param2 = type(param2, true, true, true);
-
+	param1 = type(param1, true, true, true, true);
+	param2 = type(param2, true, true, true, true);
 	if (param1 < param2) {
 		JMP(label, stopval);
 	}
@@ -268,8 +266,8 @@ export function SRL(register, constant) {
 	For instance, the value 0001 left shifted 1 time becomes 0010.*/
 
 	// Check if Parameters are valid
-	type(register, true, false, false);
-	constant = type(constant, false, false, true);
+	type(register, true, false, false, false);
+	constant = type(constant, false, false, true, false);
 
 	// Convert register to string
 	let registerString = memory.registers[register].toString();
@@ -281,7 +279,6 @@ export function SRL(register, constant) {
 			throw error
 		}
 	}
-
 
 	// Add correct amount of 0s to the right
 	for (let i = 0; i < constant; i++) {
@@ -301,8 +298,8 @@ export function SRR(register, constant) {
 	*/
 
 	// Check if Parameters are valid
-	type(register, true, false, false);
-	constant = type(constant, false, false, true);
+	type(register, true, false, false, false);
+	constant = type(constant, false, false, true, false);
 
 	// Convert register to string
 	let registerString = memory.registers[register].toString();
