@@ -1,4 +1,5 @@
 import memory from "./memory.mjs";
+import { type } from "./typeChecking.mjs";
 
 export function memoryGetAllVariables() {
 	// Find all variables and return them
@@ -45,6 +46,10 @@ export function createVariable(name, value) {
 function getAddressFromName(name) {
 	// Get address from name
 	if (name in memory.variables) {
+		// check if name is not an element of an array
+		if (name.includes("[") || name.includes("+")) {
+			return getValueOfArrayAtPosition(name.split("[")[0], name.split("[")[1].split("]")[0]);
+		}
 		return memory.variables[name];
 	}
 	return -1;
@@ -54,10 +59,30 @@ export function setVariable(name, value) {
 	// Set variable
 	let address = getAddressFromName(name);
 	if (address === -1) {
-		throw new Error("Can't set variable " + name + " because it doesn't exist");
+		throw new Error("Can't set variable " + name + " because it doesn't exist\n Line: " + memory.pc);
 	}
 	address = address.split('x');
-	memory.mem[address[0]][address[1]] = value;
+	memory.mem[address[0]][address[1]] = parseInt(value);
+}
+
+export function getValueOfArrayAtPosition(arrayName, position) {
+	// This function returns the value of an array at a given position
+	// get adress of array
+	let address = getAdressofVariable(arrayName);
+
+	// Check if info is valid the arrayname is a variable and the index is a constant
+	if (!(arrayName in memory.variables)) {
+		throw new Error(arrayName + " is not a valid variable in line " + memory.pc);
+	}
+	position = type(position, true, true, true);
+
+	// get adress of position
+	while (position > 0) {
+		address = incrementAdress(address);
+		position--;
+	}
+
+	return getValueAtAdress(address);
 }
 
 export function getVariable(name) {
@@ -118,6 +143,9 @@ export function getValueAtAdress(address) {
 
 export function getAdressofVariable(name) {
 	// Get adress of variable
+	if (!(name in memory.variables)) {
+		throw new Error(name + " is not a valid variable in line " + memory.pc);
+	}
 	return memory.variables[name];
 }
 

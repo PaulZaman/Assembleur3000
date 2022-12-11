@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import memory from "../ISO/memory.mjs";
+import memory from "../algorithms/memory.mjs";
 import Table from './Table.js'
 
 function handleStack(byteStack) {

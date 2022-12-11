@@ -1,20 +1,25 @@
-import { getVariable } from "./memManagement.mjs";
+import { getVariable, getValueOfArrayAtPosition } from "./memManagement.mjs";
 import memory from "./memory.mjs";
-import { getValueOfArrayAtPosition } from "./interpreter.mjs";
 
 
-export function type(param, register, variable, constant) {
+export function type(param, register, variable, constant, array) {
 	// This function checks if the given parameter is of the correct type
 	// register: true if the parameter can be a register
 	// variable: true if the parameter can be a variable
 	// constant: true if the parameter can be a constant
 	// If the parameter is not of the correct type an error is thrown
+	if (param === undefined) {
+		throw new Error("\nMissing argument\n\nLine: " + memory.pc);
+	}
 	try {
-		// Check if the parameter is a register
+		// Check if the parameter is a variable
 		if (variable === true) {
 			if (param in memory.variables) {
 				return getVariable(param);
 			}
+		}
+		// Check if the parameter is an array
+		if (array === true) {
 			// Check if the parameter is an element of an array
 			if (param.includes("[")) {
 				let arrayName = param.split("[")[0];
@@ -27,7 +32,8 @@ export function type(param, register, variable, constant) {
 				return getValueOfArrayAtPosition(arrayName, position);
 			}
 		}
-		// Check if the parameter is a variable
+
+		// Check if the parameter is a register
 		if (param in memory.registers && register === true) {
 			return memory.registers[param];
 		}

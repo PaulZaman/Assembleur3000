@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { run, getRunningInstruction } from './ISO/interpreter.mjs';
-import { memoryGetAllVariables, emptyMemory } from './ISO/memManagement.mjs';
-import memory from './ISO/memory.mjs';
+import { run, getRunningInstruction } from './algorithms/interpreter.mjs';
+import { memoryGetAllVariables, emptyMemory } from './algorithms/memManagement.mjs';
+import memory from './algorithms/memory.mjs';
 import Memory from './components/Memory.js';
 import TextArea from './components/TextArea.js';
 
@@ -23,13 +23,15 @@ function ISO() {
   const Run = (step) => {
     try {
       run(code, step);
-
+      VariablesReset();
     }
     catch (e) {
+      console.log(e)
+      VariablesReset();
       setOutput(e);
       memory.pc = 0;
     }
-    VariablesReset();
+
   }
 
   const handleRun = () => {
@@ -78,7 +80,7 @@ function ISO() {
           <div className="output flex justify-center m-3 hover:scale-105 duration-500">
             <div>
               <h3 className='text-center font-semibold'>OUTPUT </h3>
-              <textarea className="text-white bg-black w-60 h-40 font-[Courier] p-4" value={output} onChange={(e) => setOutput(e.target.value)} readOnly></textarea>
+              <textarea className="text-white bg-black w-60 h-60 font-[Courier] p-4" value={output} readOnly></textarea>
             </div>
           </div>
           {/* Input file */}

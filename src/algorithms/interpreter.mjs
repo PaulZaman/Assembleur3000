@@ -2,8 +2,7 @@
 import memory from './memory.mjs';
 import { LDA, STR, AND, OR, NOT, ADD, SUB, DIV, MUL, PUSH, POP, MOD, INC, DEC, JMP, BEQ, BNE, BBG, BSM, SRL, SRR } from './alu.mjs';
 import { splitTo2Arrays, fromStringToArray } from './ArrayAndStringManipulation.mjs';
-import { createArray, createVariable, emptyMemory, getAdressofVariable, incrementAdress, getValueAtAdress } from './memManagement.mjs';
-import { type } from './typeChecking.mjs';
+import { createArray, createVariable, emptyMemory } from './memManagement.mjs';
 
 export function ParserData(data) {
     // make sure data is ok
@@ -11,7 +10,7 @@ export function ParserData(data) {
         let line = data[i].split(" ");
         if (line.length !== 2) {
             // Check if the line does not contain an array declaration
-            if (!line[0].includes("[")) {
+            if ((!line[0].includes("[")) || line[1] === "") {
                 throw new Error("Data is not valid");
             }
         }
@@ -36,31 +35,6 @@ function readData(data) {
         }
     }
 }
-
-export function getValueOfArrayAtPosition(arrayName, position) {
-    // This function returns the value of an array at a given position
-    // get adress of array
-    let address = getAdressofVariable(arrayName);
-
-    // Check if info is valid the arrayname is a variable and the index is a constant
-    if (!(arrayName in memory.variables)) {
-        throw new Error(arrayName + " is not a valid variable in line " + memory.pc);
-    }
-    position = type(position, true, true, true);
-
-    console.log("Address of array: " + address);
-    console.log("Position in array: " + position);
-
-    // get adress of position
-    while (position > 0) {
-        address = incrementAdress(address);
-        position--;
-    }
-
-    return getValueAtAdress(address);
-
-}
-
 
 //Run a single instruction
 export function runInstruction(instruction, stopval) {
@@ -195,11 +169,16 @@ export function run(dataANDcode, stopval) {
     // Run code instructions until stopval is reached or End is reached
     let iterations = 0;
     while (memory.pc !== stopval && memory.pc <= code.length - 1 && iterations < 1000) {
-        if (runInstruction(code[memory.pc], stopval) === -1) {
-            memory.pc = code.length;
-        };
-        memory.pc++;
-        iterations++;
+        try {
+            if (runInstruction(code[memory.pc], stopval) === -1) {
+                memory.pc = code.length;
+            };
+            memory.pc++;
+            iterations++;
+        }
+        catch (e) {
+            throw e
+        }
     }
 
     // Throw error if iterations > 1000

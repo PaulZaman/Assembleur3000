@@ -1,9 +1,9 @@
 // contains the functions for the ISO
 // these function manipulate the stack and calls the functions in the isoFunction.js file to do the actual work
 import memory from './memory.mjs';
-import { getValueOfArrayAtPosition, runInstruction } from './interpreter.mjs';
+import { runInstruction } from './interpreter.mjs';
 import { type } from './typeChecking.mjs';
-import { setVariable } from './memManagement.mjs';
+import { setVariable, getValueOfArrayAtPosition } from './memManagement.mjs';
 
 
 export function LDA(register, value) {
@@ -12,18 +12,11 @@ export function LDA(register, value) {
 	// Memory regions loads (load into a variable, for instance) are NOT ALLOWED.
 
 	// Check if Parameters are valid
-	type(register, true, false, false);
-
-	// Check if value contains + sign --- meaning it woudl be a memory address
-	if (value.includes('+')) {
-		let values = value.split('+');
-		value = getValueOfArrayAtPosition(values[0], values[1]);
-	} else {
-		value = type(value, true, true, true);
-	}
+	type(register, true, false, false, false);
+	value = type(value, true, true, true, true);
 
 	// Load value into register
-	memory.registers[register] = value;
+	memory.registers[register] = parseInt(value);
 }
 
 export function STR(variable, value) {
@@ -32,15 +25,10 @@ export function STR(variable, value) {
 	// Register stores (store into register t0, for instance) are NOT ALLOWED.
 
 	// Check if Parameters are valid
-	type(variable, false, true, false);
-	if (value.includes('+')) {
-		let values = value.split('+');
-		value = getValueOfArrayAtPosition(values[0], values[1]);
-	}
-	else {
-		console.log(value);
-		value = type(value, true, false, true);
-	}
+	type(variable, false, true, false, true);
+	console.log(value);
+	value = type(value, true, false, true, true);
+
 
 	// Store value into variable
 	setVariable(variable, value);
