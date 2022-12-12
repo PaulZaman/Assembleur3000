@@ -29,6 +29,7 @@ const memory = {
 	],
 	"code": [],
 	"DataAndCode": "",
+	"numberOfInstructions": 0,
 }
 
 export default memory;

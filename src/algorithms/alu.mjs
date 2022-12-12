@@ -251,11 +251,21 @@ export function JMP(label, stopval) {
 
 	// Find index of label
 	memory.pc = memory.code.findIndex((element) => element === label + ":") + 1;
+	memory.numberOfInstructions++;
+	// console.log("JMP")
+	// console.log("Label: ", label)
+	// console.log("Stopval: ", stopval)
+	// console.log("PC: ", memory.pc)
+	// console.log("numberOfInstructions: ", memory.numberOfInstructions)
+	// console.log('line: ', memory.code[memory.pc])
+	// console.log(memory.code)
 
 	// Loop to execute the code after the label
-	while (runInstruction(memory.code[memory.pc], stopval) !== -1 && memory.pc !== stopval) {
+	while (runInstruction(memory.code[memory.pc], stopval) !== -1 && memory.numberOfInstructions < stopval) {
 		memory.pc++;
+		memory.numberOfInstructions++;
 	}
+	memory.numberOfInstructions--;
 }
 
 export function SRL(register, constant) {

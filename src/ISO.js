@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { run, getRunningInstruction } from './algorithms/interpreter.mjs';
+import { useState, useRef } from 'react';
+import { run, getRunningInstruction, findMaxNofIterations } from './algorithms/interpreter.mjs';
 import { memoryGetAllVariables, emptyMemory } from './algorithms/memManagement.mjs';
 import memory from './algorithms/memory.mjs';
 import Memory from './components/Memory.js';
@@ -7,11 +7,12 @@ import TextArea from './components/TextArea.js';
 
 function ISO() {
   // create variables
-  var [code, setCode] = useState('\n#DATA\nA 10\nB 15\nRES 0\n!NEXT, WE START THE CODE WITH THE #CODE MACRO\n#CODE\nLDA T0 A\nLDA T1 B\nADD T0 T1\nSTR RES T0\nHLT\n');
-  var [output, setOutput] = useState('');
-  var [registers, setRegisters] = useState(memory.registers);
-  var [variables, setVariables] = useState({});
-  var [byteStack, setByteStack] = useState({});
+  const [code, setCode] = useState('\n#DATA\nA 10\nB 15\nRES 0\n!NEXT, WE START THE CODE WITH THE #CODE MACRO\n#CODE\nLDA T0 A\nLDA T1 B\nADD T0 T1\nSTR RES T0\nHLT\n');
+  const [output, setOutput] = useState('');
+  const [registers, setRegisters] = useState(memory.registers);
+  const [variables, setVariables] = useState({});
+  const [byteStack, setByteStack] = useState({});
+  const nInstructions = useRef(0);
 
   const VariablesReset = () => {
     setVariables(memoryGetAllVariables());
@@ -20,31 +21,37 @@ function ISO() {
     setOutput(getRunningInstruction(code));
   }
 
-  const Run = (step) => {
+  const Run = () => {
     try {
-      run(code, step);
+      run(code, nInstructions.current);
       VariablesReset();
     }
     catch (e) {
       VariablesReset();
       setOutput(e);
-      memory.pc = 0;
+      nInstructions.current = 0;
     }
-
   }
 
   const handleRun = () => {
-    Run('END');
+    nInstructions.current = findMaxNofIterations(code);
+    Run();
   }
 
   const handleNextStep = () => {
-    memory.pc++;
-    Run(memory.pc);
+    nInstructions.current++;
+    if (nInstructions.current > findMaxNofIterations(code)) {
+      nInstructions.current = findMaxNofIterations(code);
+    }
+    Run();
   }
 
   const handlePrevStep = () => {
-    memory.pc--;
-    Run(memory.pc);
+    nInstructions.current--;
+    if (nInstructions.current < 0) {
+      nInstructions.current = 0;
+    }
+    Run();
   }
 
   const handleFileChange = (e) => {
@@ -61,7 +68,6 @@ function ISO() {
     VariablesReset();
 
   }
-
 
   return (
     <>

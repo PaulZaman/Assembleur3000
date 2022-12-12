@@ -1,7 +1,6 @@
 function Table({ dict, headingRow1, headingRow2, headingRow3, title }) {
 	let colHeader = null;
 	let data = null;
-	console.log(dict)
 	if (headingRow3) {
 		colHeader = (<th className="px-4 py-2 border">{headingRow3}</th>)
 		data = (
@@ -13,7 +12,7 @@ function Table({ dict, headingRow1, headingRow2, headingRow3, title }) {
 				</tr>
 			))
 		)
-	}else{
+	} else {
 		data = (
 			Object.keys(dict).map((key) => (
 				<tr key={key}>

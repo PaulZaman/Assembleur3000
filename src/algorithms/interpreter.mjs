@@ -143,16 +143,24 @@ export function runInstruction(instruction, stopval) {
             break;
         }
         default: {
+            if (instruction[instruction.length - 1] === ":") {
+                break;
+            }
             throw new Error("\nInvalid instruction\n\nLine: " + getIndexOfLineInCode() + "\n");
         }
     };
-
     // Display
     // console.log("Memory after execution: ", memory.variables, memory.registers);
 };
 
+export function findMaxNofIterations(DataAndCode) {
+    let code = splitTo2Arrays(fromStringToArray(DataAndCode));
+    return code[0].length;
+}
+
 // general run function, recieves a stop value and runs code until it reaches stopval 
 export function run(dataANDcode, stopval) {
+    console.log(stopval)
     memory.DataAndCode = dataANDcode;
 
     let [data, code] = splitTo2Arrays(fromStringToArray(dataANDcode));
@@ -167,9 +175,6 @@ export function run(dataANDcode, stopval) {
     memory.code = code;
 
     // Set stop value accordingly and read data if needed
-    if (stopval === 'END' || stopval > code.length - 1) {
-        stopval = code.length - 1;
-    }
     if (stopval > 0) {
         readData(data);
     }
@@ -179,13 +184,15 @@ export function run(dataANDcode, stopval) {
 
     // Run code instructions until stopval is reached or End is reached
     let iterations = 0;
-    while (memory.pc !== stopval && memory.pc <= code.length - 1 && iterations < 1000) {
+    memory.numberOfInstructions = 0;
+    while (memory.numberOfInstructions < stopval && memory.pc <= code.length - 1 && iterations < 1000) {
         try {
             if (runInstruction(code[memory.pc], stopval) === -1) {
                 memory.pc = code.length;
             };
             memory.pc++;
             iterations++;
+            memory.numberOfInstructions++;
         }
         catch (e) {
             throw e
@@ -199,13 +206,19 @@ export function run(dataANDcode, stopval) {
     if (memory.pc < 0) {
         memory.pc = 0;
     }
+    if (memory.pc > code.length) {
+        memory.pc = code.length;
+    }
+
 }
 
 export function getRunningInstruction(dataAndcode) {
     let output = memory.code[memory.pc - 1];
-    if (output === undefined) {
+    if (output === undefined && memory.pc === 0) {
         return "Step by step executor\n\nPress next to Start the execution to next step";
-
+    }
+    if (output === undefined && memory.pc > 0) {
+        return "End of execution";
     }
     return "Executed until instruction: \n\n" + output
 
