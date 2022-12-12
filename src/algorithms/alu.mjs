@@ -162,6 +162,7 @@ export function MOD(register, value) {
 	// Check if Parameters are valid
 	type(register, true, false, false, false);
 	value = type(value, true, true, true, true);
+	console.log(register, value);
 
 	memory.registers[register] = value % memory.registers[register];
 }
@@ -252,13 +253,6 @@ export function JMP(label, stopval) {
 	// Find index of label
 	memory.pc = memory.code.findIndex((element) => element === label + ":") + 1;
 	memory.numberOfInstructions++;
-	// console.log("JMP")
-	// console.log("Label: ", label)
-	// console.log("Stopval: ", stopval)
-	// console.log("PC: ", memory.pc)
-	// console.log("numberOfInstructions: ", memory.numberOfInstructions)
-	// console.log('line: ', memory.code[memory.pc])
-	// console.log(memory.code)
 
 	// Loop to execute the code after the label
 	while (runInstruction(memory.code[memory.pc], stopval) !== -1 && memory.numberOfInstructions < stopval) {

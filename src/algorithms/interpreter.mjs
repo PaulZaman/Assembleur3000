@@ -155,7 +155,8 @@ export function runInstruction(instruction, stopval) {
 
 export function findMaxNofIterations(DataAndCode) {
     let code = splitTo2Arrays(fromStringToArray(DataAndCode));
-    return code[0].length;
+    console.log(code[1]);
+    return code[1].length;
 }
 
 // general run function, recieves a stop value and runs code until it reaches stopval 
