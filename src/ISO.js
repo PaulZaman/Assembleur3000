@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { run, getRunningInstruction, findMaxNofIterations } from './algorithms/interpreter.mjs';
+import { run, getRunningInstruction } from './algorithms/interpreter.mjs';
 import { memoryGetAllVariables, emptyMemory } from './algorithms/memManagement.mjs';
 import memory from './algorithms/memory.mjs';
 import Memory from './components/Memory.js';
@@ -34,15 +34,15 @@ function ISO() {
   }
 
   const handleRun = () => {
-    nInstructions.current = findMaxNofIterations(code);
+    nInstructions.current = 100;
     Run();
   }
 
   const handleNextStep = () => {
     nInstructions.current++;
-    if (nInstructions.current > findMaxNofIterations(code)) {
-      nInstructions.current = findMaxNofIterations(code);
-    }
+    // if (nInstructions.current > findMaxNofIterations(code)) {
+    //   nInstructions.current = findMaxNofIterations(code);
+    // }
     Run();
   }
 

@@ -135,7 +135,7 @@ export function DIV(register, value) {
 	if (value !== 0) {
 		memory.registers[register] = Math.floor(memory.registers[register] / value);
 	}
-	else throw new Error("Division by 0 at line " + getIndexOfLineInCode());
+	else throw new Error("\nDivision by 0\n\nLine " + getIndexOfLineInCode());
 }
 
 export function MUL(register, value) {
@@ -199,7 +199,9 @@ export function BEQ(param1, param2, label, stopval) {
 	param2 = type(param2, true, true, true, true);
 
 	if (param1 === param2) {
-		JMP(label, stopval);
+		if (JMP(label, stopval) === -1) {
+			return -1;
+		}
 	}
 }
 
@@ -213,7 +215,9 @@ export function BNE(param1, param2, label, stopval) {
 	param2 = type(param2, true, true, true, true);
 
 	if (param1 !== param2) {
-		JMP(label, stopval);
+		if (JMP(label, stopval) === -1) {
+			return -1;
+		}
 	}
 }
 
@@ -228,7 +232,9 @@ export function BBG(param1, param2, label, stopval) {
 	param2 = type(param2, true, true, true, true);
 
 	if (param1 > param2) {
-		JMP(label, stopval);
+		if (JMP(label, stopval) === -1) {
+			return -1;
+		}
 	}
 }
 
@@ -242,7 +248,9 @@ export function BSM(param1, param2, label, stopval) {
 	param1 = type(param1, true, true, true, true);
 	param2 = type(param2, true, true, true, true);
 	if (param1 < param2) {
-		JMP(label, stopval);
+		if (JMP(label, stopval) === -1) {
+			return -1;
+		}
 	}
 }
 
@@ -255,7 +263,10 @@ export function JMP(label, stopval) {
 	memory.numberOfInstructions++;
 
 	// Loop to execute the code after the label
-	while (runInstruction(memory.code[memory.pc], stopval) !== -1 && memory.numberOfInstructions < stopval) {
+	while (memory.numberOfInstructions < stopval) {
+		if (runInstruction(memory.code[memory.pc], stopval) === -1) {
+			return -1;
+		}
 		memory.pc++;
 		memory.numberOfInstructions++;
 	}
@@ -311,7 +322,7 @@ export function SRR(register, constant) {
 	// Check if all caracters in registerString are 0 or 1
 	for (let i = 0; i < registerString.length; i++) {
 		if (registerString[i] !== "0" && registerString[i] !== "1") {
-			let error = "\n" + registerString + " is not a valid binary number.\nLine " + getIndexOfLineInCode();
+			let error = "\n" + registerString + " is not a valid binary number.\n\nLine " + getIndexOfLineInCode();
 			throw new Error(error)
 		}
 	}

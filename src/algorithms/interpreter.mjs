@@ -87,7 +87,9 @@ export function runInstruction(instruction, stopval) {
             break;
         }
         case "JMP": {
-            JMP(params[0], stopval);
+            if (JMP(params[0], stopval) === -1) {
+                return -1;
+            }
             break;
         }
         case "AND": {
@@ -119,19 +121,27 @@ export function runInstruction(instruction, stopval) {
             break;
         }
         case "BEQ": {
-            BEQ(params[0], params[1], params[2], stopval);
+            if (BEQ(params[0], params[1], params[2], stopval) === -1) {
+                return -1;
+            }
             break;
         }
         case "BNE": {
-            BNE(params[0], params[1], params[2], stopval);
+            if (BNE(params[0], params[1], params[2], stopval) === -1) {
+                return -1;
+            };
             break;
         }
         case "BBG": {
-            BBG(params[0], params[1], params[2], stopval);
+            if (BBG(params[0], params[1], params[2], stopval) === -1) {
+                return -1;
+            }
             break;
         }
         case "BSM": {
-            BSM(params[0], params[1], params[2], stopval);
+            if (BSM(params[0], params[1], params[2], stopval) === -1) {
+                return -1;
+            };
             break;
         }
         case "SRL": {
@@ -155,13 +165,11 @@ export function runInstruction(instruction, stopval) {
 
 export function findMaxNofIterations(DataAndCode) {
     let code = splitTo2Arrays(fromStringToArray(DataAndCode));
-    console.log(code[1]);
     return code[1].length;
 }
 
 // general run function, recieves a stop value and runs code until it reaches stopval 
 export function run(dataANDcode, stopval) {
-    console.log(stopval)
     memory.DataAndCode = dataANDcode;
 
     let [data, code] = splitTo2Arrays(fromStringToArray(dataANDcode));

@@ -23,6 +23,9 @@ export function splitTo2Arrays(dataANDcode) {
 	//console.log(code);
 	data = data.filter((element) => !element.startsWith("!") && element !== "");
 	code = code.filter((element) => !element.startsWith("!") && element !== "");
+	if (code[code.length - 1] !== "HLT") {
+		throw new Error("\nNo HLT instruction at the end of code");
+	}
 	return [data, code];
 };
 

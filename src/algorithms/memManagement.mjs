@@ -1,5 +1,5 @@
 import memory from "./memory.mjs";
-import { type } from "./typeChecking.mjs";
+import { getIndexOfLineInCode, type } from "./typeChecking.mjs";
 
 export function memoryGetAllVariables() {
 	// Find all variables and return them
@@ -57,12 +57,37 @@ function getAddressFromName(name) {
 
 export function setVariable(name, value) {
 	// Set variable
+	// if name is an array, get the value of the array at the given position
+	if (name.includes("[")) {
+		setValueOfArrayAtPosition(name.split("[")[0], name.split("[")[1].split("]")[0], value);
+		return;
+	}
+	if (name.includes("+")) {
+		setValueOfArrayAtPosition(name.split("+")[0], name.split("+")[1].split("]")[0], value);
+		return;
+	}
+	// if not, set the value of the variable
 	let address = getAddressFromName(name);
 	if (address === -1) {
-		throw new Error("Can't set variable " + name + " because it doesn't exist\n Line: " + memory.pc);
+		throw new Error("\nCan't set variable " + name + " because it doesn't exist\n\nLine: " + memory.pc);
 	}
 	address = address.split('x');
 	memory.mem[address[0]][address[1]] = parseInt(value);
+}
+
+export function setValueOfArrayAtPosition(arrayName, position, value) {
+	// This function sets the value of an array at a given position
+	// get adress of array
+	let address = getAdressofVariable(arrayName);
+	if (!(arrayName in memory.variables)) {
+		throw new Error(arrayName + " is not a valid variable\nLine " + getIndexOfLineInCode());
+	}
+	position = type(position, true, true, true, false);
+	while (position > 0) {
+		address = incrementAdress(address);
+		position--;
+	}
+	memory.mem[address.split('x')[0]][address.split('x')[1]] = parseInt(value);
 }
 
 export function getValueOfArrayAtPosition(arrayName, position) {
@@ -72,9 +97,9 @@ export function getValueOfArrayAtPosition(arrayName, position) {
 
 	// Check if info is valid the arrayname is a variable and the index is a constant
 	if (!(arrayName in memory.variables)) {
-		throw new Error(arrayName + " is not a valid variable in line " + memory.pc);
+		throw new Error(arrayName + " is not a valid variable\nLine " + getIndexOfLineInCode());
 	}
-	position = type(position, true, true, true);
+	position = type(position, true, true, true, false);
 
 	// get adress of position
 	while (position > 0) {

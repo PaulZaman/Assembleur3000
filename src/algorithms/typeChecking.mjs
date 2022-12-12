@@ -43,10 +43,10 @@ export function type(param, register, variable, constant, array) {
 		}
 	} catch {
 		// If the parameter is not of the correct type throw an error
-		throw new Error("Invalid type for " + param + "\n\nLine: " + getIndexOfLineInCode());
+		throw new Error("\nInvalid type for " + param + "\n\nLine: " + getIndexOfLineInCode());
 	}
 	// If the parameter is not of the correct type throw an error
-	let error = "\n" + param + " is not a valid parameter\n\nLine :" + getIndexOfLineInCode();
+	let error = "\n" + param + " is not a valid parameter\n\nLine: " + getIndexOfLineInCode();
 	throw new Error(error);
 }
 
