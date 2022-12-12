@@ -8,8 +8,8 @@ export function type(param, register, variable, constant, array) {
 	// variable: true if the parameter can be a variable
 	// constant: true if the parameter can be a constant
 	// If the parameter is not of the correct type an error is thrown
-	if (param === undefined) {
-		throw new Error("\nMissing argument\n\nLine: " + memory.pc);
+	if (param === undefined || param === " " || param === "") {
+		throw new Error("\nMissing argument\n\nLine: " + getIndexOfLineInCode());
 	}
 	try {
 		// Check if the parameter is a variable
@@ -43,9 +43,20 @@ export function type(param, register, variable, constant, array) {
 		}
 	} catch {
 		// If the parameter is not of the correct type throw an error
-		throw new Error("Invalid type for " + param + "\n\nLine: " + memory.pc);
+		throw new Error("Invalid type for " + param + "\n\nLine: " + getIndexOfLineInCode());
 	}
 	// If the parameter is not of the correct type throw an error
-	let error = "\n" + param + " is not a valid parameter\n\nLine :" + memory.pc;
+	let error = "\n" + param + " is not a valid parameter\n\nLine :" + getIndexOfLineInCode();
 	throw new Error(error);
+}
+
+export function getIndexOfLineInCode() {
+	let code = memory["DataAndCode"].split("\n");
+	// Get index of line in code
+	for (let i = 0; i < code.length; i++) {
+		if (code[i] === memory.code[memory.pc]) {
+			return i + 1;
+		}
+	}
+	return "";
 }

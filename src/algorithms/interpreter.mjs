@@ -3,11 +3,16 @@ import memory from './memory.mjs';
 import { LDA, STR, AND, OR, NOT, ADD, SUB, DIV, MUL, PUSH, POP, MOD, INC, DEC, JMP, BEQ, BNE, BBG, BSM, SRL, SRR } from './alu.mjs';
 import { splitTo2Arrays, fromStringToArray } from './ArrayAndStringManipulation.mjs';
 import { createArray, createVariable, emptyMemory } from './memManagement.mjs';
+import { getIndexOfLineInCode } from './typeChecking.mjs';
 
 export function ParserData(data) {
     // make sure data is ok
     for (let i = 1; i < data.length; i++) {
         let line = data[i].split(" ");
+        // remove elements that are empty
+        line = line.filter(function (el) {
+            return el !== "";
+        });
         if (line.length !== 2) {
             // Check if the line does not contain an array declaration
             if ((!line[0].includes("[")) || line[1] === "") {
@@ -138,7 +143,7 @@ export function runInstruction(instruction, stopval) {
             break;
         }
         default: {
-            break;
+            throw new Error("\nInvalid instruction\n\nLine: " + getIndexOfLineInCode() + "\n");
         }
     };
 
@@ -148,6 +153,7 @@ export function runInstruction(instruction, stopval) {
 
 // general run function, recieves a stop value and runs code until it reaches stopval 
 export function run(dataANDcode, stopval) {
+    memory.DataAndCode = dataANDcode;
 
     let [data, code] = splitTo2Arrays(fromStringToArray(dataANDcode));
     // Before running, we need to run the data through the interpreter to check wheather
@@ -188,7 +194,7 @@ export function run(dataANDcode, stopval) {
 
     // Throw error if iterations > 1000
     if (iterations > 1000) {
-        throw new Error("Too many iterations");
+        throw new Error("\nToo many iterations");
     }
     if (memory.pc < 0) {
         memory.pc = 0;
@@ -198,10 +204,8 @@ export function run(dataANDcode, stopval) {
 export function getRunningInstruction(dataAndcode) {
     let output = memory.code[memory.pc - 1];
     if (output === undefined) {
-        output = "#CODE\nPress next to move to next step";
-    }
-    if (memory.code[memory.pc] === 'HLT') {
-        output = "HLT\n Execution Ended";
+        return "Step by step executor\n\nPress next to Start the execution to next step";
+
     }
     return "Executed until instruction: \n\n" + output
 

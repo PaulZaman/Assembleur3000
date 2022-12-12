@@ -1,5 +1,5 @@
 function TextArea({ value, onChange }) {
-	let nLines = value.split("\n").length + 1;
+	let nLines = value.split("\n").length;
 	return (
 		<div>
 			<div className="editor flex flex-row text-white bg-black w-80 h-96 font-[Courier] overflow-auto">
@@ -9,7 +9,7 @@ function TextArea({ value, onChange }) {
 						<span key={i}>{i + 1}</span>
 					))}
 				</div>
-				<textarea className="bg-black outline-0 pl-2 w-screen object-contain h-screen  overflow-hidden no-underline" value={value} onChange={onChange}></textarea>
+				<textarea wrap="off" className="bg-black outline-0 pl-2 resize-y w-screen h-screen" value={value} onChange={onChange}></textarea>
 			</div>
 		</div >
 	)

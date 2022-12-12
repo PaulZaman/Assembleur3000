@@ -2,7 +2,7 @@
 // these function manipulate the stack and calls the functions in the isoFunction.js file to do the actual work
 import memory from './memory.mjs';
 import { runInstruction } from './interpreter.mjs';
-import { type } from './typeChecking.mjs';
+import { type, getIndexOfLineInCode } from './typeChecking.mjs';
 import { setVariable } from './memManagement.mjs';
 
 
@@ -135,7 +135,7 @@ export function DIV(register, value) {
 	if (value !== 0) {
 		memory.registers[register] = Math.floor(memory.registers[register] / value);
 	}
-	else throw new Error("Division by 0 at line " + memory.pc);
+	else throw new Error("Division by 0 at line " + getIndexOfLineInCode());
 }
 
 export function MUL(register, value) {
@@ -192,7 +192,7 @@ export function BEQ(param1, param2, label, stopval) {
 	/* BEQ <reg1>/<var1>/<const1> <reg2>/<var2>/<const2> <LABEL>
 	Performs a comparison between two values, given by registers, variables or constants. 
 	Any combination is permitted. If they are equal, jump to the address defined by the label LABEL*/
-
+	console.log("BEQ", param1, param2, label, stopval)
 	// Check if Parameters are valid
 	param1 = type(param1, true, true, true, true);
 	param2 = type(param2, true, true, true, true);
@@ -250,7 +250,7 @@ export function JMP(label, stopval) {
 	Jump to the address defined by the label LABEL*/
 
 	// Find index of label
-	memory.pc = memory.code.findIndex((element) => element === label + ":");
+	memory.pc = memory.code.findIndex((element) => element === label + ":") + 1;
 
 	// Loop to execute the code after the label
 	while (runInstruction(memory.code[memory.pc], stopval) !== -1 && memory.pc !== stopval) {
@@ -275,7 +275,7 @@ export function SRL(register, constant) {
 	// Check if all caracters in registerString are 0 or 1
 	for (let i = 0; i < registerString.length; i++) {
 		if (registerString[i] !== "0" && registerString[i] !== "1") {
-			let error = registerString + " is not a valid binary number.\nCommand line " + memory.pc;
+			let error = "\n" + registerString + " is not a valid binary number.\nLine " + getIndexOfLineInCode();
 			throw error
 		}
 	}
@@ -307,8 +307,8 @@ export function SRR(register, constant) {
 	// Check if all caracters in registerString are 0 or 1
 	for (let i = 0; i < registerString.length; i++) {
 		if (registerString[i] !== "0" && registerString[i] !== "1") {
-			let error = registerString + " is not a valid binary number.\nCommand line " + memory.pc;
-			throw error
+			let error = "\n" + registerString + " is not a valid binary number.\nLine " + getIndexOfLineInCode();
+			throw new Error(error)
 		}
 	}
 
