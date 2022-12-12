@@ -18,7 +18,7 @@ function handleVariables(variables) {
 	// Function returns stack table if stack is not empty
 	if (Object.keys(variables).length > 0) {
 		return (
-			<Table dict={variables} headingRow1="Variable" headingRow2="Value" title="Variables" />
+		<Table dict={variables} headingRow1="Variable" headingRow2="Value" headingRow3="Adress" title="Variables" />
 		)
 	}
 	else return (
@@ -45,7 +45,7 @@ function Memory({ registers, variables, byteStack }) {
 				{variableTable}
 			</div>
 			{/* display the memroy in a table */}
-			<div className="hover:scale-105 duration-500">
+			<div>
 				<h1 className="text-center font-semibold m-5"> MEMORY</h1>
 				<div className="MEMORY flex justify-center">
 					<table className="table-auto border mb-8">

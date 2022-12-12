@@ -71,12 +71,12 @@ function ISO() {
           <TextArea value={code} onChange={(e) => setCode(e.target.value)} />
         </div>
         <div className="m-3">
-          <div className="flex justify-center h-12 hover:scale-105 duration-500">
+          <div className="flex justify-center h-12">
             <button><img src="../skip-button.png" alt="PREV" className="rotate-180 w-auto h-9 hover:h-10 m-1 transition-all" onClick={handlePrevStep} /></button>
             <button><img src="../play.png" alt="PLAY" className="h-9 w-auto hover:h-10 m-1 transition-all" onClick={handleRun} /></button>
             <button><img src="../skip-button.png" alt="NEXT" className="w-auto h-9 hover:h-10 m-1 transition-all" onClick={handleNextStep} /></button>
           </div>
-          <div className="output flex justify-center m-3 hover:scale-105 duration-500">
+          <div className="output flex justify-center m-3">
             <div>
               <h3 className='text-center font-semibold'>OUTPUT </h3>
               <textarea className="text-white bg-black w-60 h-60 font-[Courier] p-4" value={output} readOnly></textarea>
