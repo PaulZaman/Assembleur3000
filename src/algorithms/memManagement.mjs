@@ -5,7 +5,7 @@ export function memoryGetAllVariables() {
 	// Find all variables and return them
 	let variables = {};
 	for (const vars of Object.entries(memory.variables)) {
-		variables[vars[0]] = getVariable(vars[0]);
+		variables[vars[0]] = [getVariable(vars[0]), vars[1]];
 	}
 	return variables;
 }
